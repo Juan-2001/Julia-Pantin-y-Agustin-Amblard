@@ -1,0 +1,43 @@
+Modulo Point:
+
+ghci> newP 3 4
+Poi 3 4
+ghci> difP (newP 3 4) (newP 5 6)
+2.828427
+
+Modulo City:
+
+ghci> bsas = newC "Buenos Aires" (newP 3 4)
+ghci> nameC bsas
+"Buenos Aires"
+ghci> lanus = newC "Lanus" (newP 6 8)
+ghci> distanceC bsas lanus
+5.0
+
+Modulo Quality:
+
+ghci> canalA = newQ "CanalA" 5 3.8
+ghci> capacityQ canalA
+5
+ghci> delayQ canalA
+3.8
+
+Modulo Link:
+
+ghci> avellaneda = newC "Avellaneda" (newP 3 4)
+ghci> lanus = newC "Lanus" (newP 6 8)
+ghci> qualityAL = newQ "CanalAL" 4 8.7
+ghci> linkAL = newL avellaneda lanus qualityAL
+ghci> connectsL avellaneda linkAL
+True
+ghci> lomasdezamora = newC "Lomas de Zamora" (newP 9 12)
+ghci> connectsL lomasdezamora linkAL
+False
+ghci> linksL avellaneda lanus linkAL
+True
+ghci> linksL avellaneda lomasdezamora linkAL
+False
+ghci> capacityL linkAL
+4
+ghci> delayL linkAL
+8.7
