@@ -41,3 +41,34 @@ ghci> capacityL linkAL
 4
 ghci> delayL linkAL
 8.7
+
+
+Modulo Tunel: 
+
+ghci> avellaneda = newC "Avellaneda" (newP 3 4) ; lanus = newC "Lanus" (newP 6 8) ; banfield = newC "Banfield" (newP 12 16); 
+lomasdezamora = newC "Lomas de Zamora" (newP 9 12); canalSur = newQ "Canal Sur" 4 8.23; canalOeste = newQ "Canal Oeste" 6 10.27;
+linkSur = newL avellaneda lanus canalSur; linkSur2 = newL avellaneda lomasdezamora canalOeste;
+linkOeste = newL avellaneda banfield canalOeste; linkOeste2 = newL banfield lanus canalSur ; tunelSur = newT [linkSur, linkSur2] ;
+tunelOeste = newT [linkOeste , linkOeste2]
+ghci> connectsT avellaneda lanus tunelSur
+True
+ghci> connectsT lomasdezamora banfield tunelSur
+False
+ghci> connectsT lomasdezamora banfield tunelOeste
+False
+ghci> connectsT lanus banfield tunelOeste
+True
+ghci> connectsT banfield avellaneda tunelOeste
+True
+ghci> usesT linkSur tunelSur
+True
+ghci> usesT linkOeste tunelSur
+False
+ghci> usesT linkOeste2 tunelOeste
+True
+ghci> usesT linkSur2 tunelOeste
+False
+ghci> delayT tunelSur
+18.5
+ghci> delayT tunelOeste
+18.5

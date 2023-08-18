@@ -1,6 +1,5 @@
 module Quality ( Quality, newQ, capacityQ, delayQ )
    where
-import Data.Text.Array (new)
 
 data Quality = Qua String Int Float deriving (Eq, Show)
 
