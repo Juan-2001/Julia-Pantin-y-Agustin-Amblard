@@ -39,7 +39,7 @@ linkedR (Reg cs (l:ls) ts) city1 city2
     | otherwise = linkedR (Reg cs ls ts) city1 city2  
 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
-delayR (Reg [] [] []) city1 city2 = 
+delayR (Reg [] [] []) city1 city2 =  
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
 availableCapacityForR (Reg cs ls ts) city1 city2 = 
