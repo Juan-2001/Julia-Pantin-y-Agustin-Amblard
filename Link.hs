@@ -19,9 +19,9 @@ linksL city1 city2 (Lin city3 city4 quality) = (city1 == city3 && city2 == city4
 
 
 capacityL :: Link -> Int
-capacityL (Lin city1 city2 quality) = capacityQ quality
+capacityL (Lin city1 city2 int) = capacityQ int
 
 
 delayL :: Link -> Float     -- la demora que sufre una conexion en este canal
-delayL (Lin city1 city2 quality) = delayQ quality
+delayL (Lin city1 city2 float) = delayQ float
 
