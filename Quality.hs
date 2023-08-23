@@ -8,8 +8,8 @@ newQ = Qua
 
 
 capacityQ :: Quality -> Int -- cuantos túneles puede tolerar esta conexión
-capacityQ (Qua canal capacity delay) = capacity
+capacityQ (Qua canal int float) = int
 
 
 delayQ :: Quality -> Float  -- la demora por unidad de distancia que sucede en las conexiones de este canal
-delayQ (Qua canal capacity delay) = delay
+delayQ (Qua canal int float) = float
