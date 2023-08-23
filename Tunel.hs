@@ -4,7 +4,7 @@ module Tunel ( Tunel, newT, connectsT, usesT, delayT )
 import Point (Point, newP)
 import City (City, newC, nameC)
 import Quality (Quality, newQ, capacityQ, delayQ)
-import Link (Link, newL, linksL, delayL)
+import Link (Link, newL, linksL, delayL, connectsL)
 
 data Tunel = Tun [Link] deriving (Eq, Show)
 
@@ -14,8 +14,8 @@ newT = Tun
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
 connectsT city1 city2 (Tun []) = False 
 connectsT city1 city2 (Tun (link : linkS))
-   | linksL city1 city2 link = True
-   | otherwise = connectsT city1 city2 (Tun linkS)
+   | connectsL city1 link && connectsL city2 (last linkS) = True
+   | otherwise = False
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
 usesT link1 (Tun []) = False
