@@ -13,10 +13,10 @@ newT = Tun
 
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
 connectsT city1 city2 (Tun []) = False 
-connectsT city1 city2 (Tun[link]) = connectsL city1 link && connectsL city2 link
-connectsT city1 city2 (Tun (link : linkS))
-   | connectsL city1 link && connectsL city2 (last linkS) = True
-   | otherwise = connectsT city1 city2 (Tun linkS)
+connectsT city1 city2 (Tun linkS) = (isFirst city1 linkS && isFirst city2 (reverse linkS)) || (isFirst city2 linkS && isFirst city2 (reverse linkS))
+   where 
+      isFirst city [link] = connectsL city link
+      isFirst city linkS@(l:ls) = connectsL city (head linkS) && not (connectsL city (head ls))
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
 usesT link1 (Tun []) = False
