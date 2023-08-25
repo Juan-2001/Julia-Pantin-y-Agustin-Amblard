@@ -13,9 +13,10 @@ newT = Tun
 
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
 connectsT city1 city2 (Tun []) = False 
+connectsT city1 city2 (Tun[link]) = connectsL city1 link && connectsL city2 link
 connectsT city1 city2 (Tun (link : linkS))
    | connectsL city1 link && connectsL city2 (last linkS) = True
-   | otherwise = False
+   | otherwise = connectsT city1 city2 (Tun linkS)
 
 usesT :: Link -> Tunel -> Bool  -- indica si este tunel atraviesa ese link
 usesT link1 (Tun []) = False
@@ -25,6 +26,5 @@ usesT link1 (Tun (link:linkS))
 
 delayT :: Tunel -> Float -- la demora que sufre una conexion en este tunel
 delayT (Tun []) = 0.0
-delayT (Tun (link : linkS))
-    = delayL link + delayT (Tun linkS)
+delayT (Tun links) = sum (map delayL links)
 
