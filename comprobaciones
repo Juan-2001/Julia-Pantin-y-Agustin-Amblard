@@ -93,4 +93,25 @@ ghci> cordoba = newR `foundR` avellaneda `foundR` lanus `foundR` banfield `found
 ghci> cordoba
 Reg [Cit "Lomas de Zamora" (Poi 9 12),Cit "Banfield" (Poi 12 16),Cit "Lanus" (Poi 6 8),Cit "Avellaneda" (Poi 3 4)] [] []
 ghci> 
+cordoba1 = linkR cordoba avellaneda lanus canalSur ; cordoba2 = linkR cordoba1 avellaneda banfield canalOeste; cordoba3 = linkR cordoba2 banfield lomasdezamora canalSur
+cordoba4 = linkR cordoba3 banfield lomasdezamora canalSur
 
+
+c1 = newC "Avellaneda" (newP 3 4) ; c2 = newC "Lanus" (newP 6 8) ; c3 = newC "Banfield" (newP 12 16); c4 = newC "Lomas de Zamora" (newP 9 12); cS = newQ "Canal Sur" 4 8.23; cO = newQ "Canal Oeste" 6 10.27; lS = newL c1 c2 cS; lS2 = newL c2 c3 cO;lO = newL c3 c4 cO; lO2 = newL c4 c1 cS ; bsas = newR; bsas1 = foundR bsas c1; bsas2 = foundR bsas1 c2; bsas3 = foundR bsas2 c3; bsas4 = foundR bsas3 c4; bsas5 = linkR bsas4 c1 c2 cS; bsas6 = linkR bsas5 c2 c3 cS; bsas7 = linkR bsas6 c3 c4 cO; bsas8 = tunelR bsas7 [c1,c2];bsas9 = tunelR bsas8 [c1,c2,c3,c4]; bsas10 = tunelR bsas9 [c3,c4]; bsas13 = tunelR bsas10 [c2,c3];
+ ghci> connectedR bsas13 c2 c3
+True
+ghci> c5 = newC "Quilmes" (newP 15 20)
+ghci> c5
+Cit "Quilmes" (Poi 15 20)
+ghci> connectedR bsas13 c5 c1
+False
+ghci> bsas14 = tunelR bsas13 [c2,c3]
+ghci> bsas14
+*** Exception: Ya existe este Tunel
+CallStack (from HasCallStack):
+  error, called at Region.hs:43:37 in main:Region
+
+ghci> linkedR bsas13 c1 c4
+False
+ghci> linkedR bsas13 c1 c2
+True
