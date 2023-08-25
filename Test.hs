@@ -29,11 +29,12 @@ tunelSur = newT [linkSur, linkSur2] ; tunelOeste = newT [linkOeste , linkOeste2]
 --Region
 reg1 = newR
 reg2 = foundR newR avellaneda
-reg3 = foundR (foundR newR avellaneda) lanus
-reg4 = linkR reg3 avellaneda lanus canalSur
-ciudadesReg= foundR (foundR (foundR (foundR newR avellaneda) lanus) banfield) lomasdezamora
-linksReg = linkR (linkR (linkR ciudadesReg avellaneda lanus canalSur) lanus banfield canalSur) banfield lomasdezamora canalSur
-buenosaires = tunelR linksReg [avellaneda, lanus, banfield, lomasdezamora]
+
+ciudadesReg = foundR (foundR (foundR (foundR newR avellaneda) lanus) banfield) lomasdezamora
+
+linksReg1 = linkR (linkR ciudadesReg avellaneda lanus canalSur) banfield lomasdezamora canalSur
+linksReg2 = linkR (linkR (linkR ciudadesReg avellaneda lanus canalSur) lanus banfield canalSur) banfield lomasdezamora canalSur
+buenosaires = tunelR linksReg2 [avellaneda, lanus, banfield, lomasdezamora]
 
 
 testF :: Show a => a -> Bool --si la funcion devuelve un error, devuelve True, si no devuelve error, devuelve False.
@@ -63,10 +64,12 @@ testavailableCapacityForR :: Region -> City -> City -> Bool
 testavailableCapacityForR region city1 city2 = testF (availableCapacityForR region city1 city2)
 
 t = [testfoundR reg1 avellaneda, testfoundR reg2 avellaneda, testlinkR ciudadesReg avellaneda lanus canalSur, 
- testlinkR ciudadesReg avellaneda caballito canalSur, 
- testtunelR buenosaires [avellaneda,lanus,  banfield, lomasdezamora],testtunelR linksReg [avellaneda, lanus, banfield],
- connectedR buenosaires avellaneda lomasdezamora,connectedR buenosaires avellaneda lanus, 
- linkedR buenosaires lanus banfield, linkedR buenosaires lanus lomasdezamora,testdelayR buenosaires avellaneda lomasdezamora,
+ testlinkR ciudadesReg avellaneda caballito canalSur, testlinkR linksReg2 avellaneda lanus canalOeste,
+ testtunelR reg1 [avellaneda, lanus],testtunelR buenosaires [avellaneda,lanus,  banfield, lomasdezamora],
+ testtunelR linksReg2 [avellaneda, lanus, banfield],connectedR buenosaires avellaneda lomasdezamora,
+ connectedR buenosaires avellaneda lanus, connectedR linksReg2 avellaneda lomasdezamora, linkedR buenosaires lanus banfield, 
+ linkedR buenosaires lanus lomasdezamora,testdelayR buenosaires avellaneda lomasdezamora,
  testdelayR buenosaires avellaneda caballito, testdelayR buenosaires avellaneda lanus,
  testavailableCapacityForR buenosaires lanus banfield,testavailableCapacityForR buenosaires lanus lomasdezamora, 
  testavailableCapacityForR buenosaires lanus caballito]
+
