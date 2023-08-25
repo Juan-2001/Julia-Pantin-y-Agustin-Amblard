@@ -27,6 +27,7 @@ hasLinkR (l:ls) c1 c2
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR (Reg cs ls ts) city1 city2 quality
     | hasLinkR ls city1 city2 = error "Ya hay un link que enlaza estas ciudades"
+    |not (city1 `elem` cs && city2 `elem` cs) = error "Una de las ciudades ingresadas no pertenece a esta región."
     | otherwise =
         let newLink = newL city1 city2 quality
         in Reg cs (ls ++ [newLink]) ts
@@ -81,8 +82,10 @@ linkedR (Reg cs (l:ls) ts) city1 city2
 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
 delayR (Reg _ [] []) _ _ =  0.0
-delayR region city1 city2 = 
-    let totalOfTunel = delayT (theTunel region city1 city2)
+delayR (Reg cs ls ts) city1 city2
+    | not (city1 `elem` cs && city2 `elem` cs) = error "Una de las ciudades ingresadas no pertenece a esta región."  
+    |otherwise = 
+    let totalOfTunel = delayT (theTunel (Reg cs ls ts) city1 city2)
     in totalOfTunel
     where
         theTunel :: Region -> City -> City -> Tunel
@@ -92,6 +95,8 @@ delayR region city1 city2 =
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
 availableCapacityForR (Reg _ [] _) city1 city2 = error "No hay links"
+availableCapacityForR (Reg cs _ _) city1 city2
+    |not (city1 `elem` cs && city2 `elem` cs) = error "Una de las ciudades ingresadas no pertenece a esta región." 
 availableCapacityForR reg@(Reg cs (l:ls) ts) city1 city2 =
     if linksL city1 city2 l then
         capacityL l - usedCapacity l reg
