@@ -8,9 +8,7 @@ import Link (Link, linksL, delayL, newL, capacityL)
 import Tunel (Tunel, newT, connectsT, usesT, delayT)
 import GHC.Exts.Heap (GenClosure(tsoStack))
 
-
 data Region = Reg [City] [Link] [Tunel] deriving (Show)
-
 
 newR :: Region
 newR = Reg [] [] []
@@ -25,7 +23,6 @@ hasLinkR [] _ _ = False
 hasLinkR (l:ls) c1 c2
     | linksL c1 c2 l = True
     | otherwise = hasLinkR ls c1 c2
-
 
 linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
 linkR (Reg cs ls ts) city1 city2 quality
@@ -84,9 +81,14 @@ linkedR (Reg cs (l:ls) ts) city1 city2
 
 delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
 delayR (Reg _ [] []) _ _ =  0.0
-delayR (Reg cs ls (t:ts)) city1 city2
-    | connectsT city1 city2 t = delayT t
-    | otherwise = delayR (Reg cs ls ts) city1 city2
+delayR region city1 city2 = 
+    let totalOfTunel = delayT (theTunel region city1 city2)
+    in totalOfTunel
+    where
+        theTunel :: Region -> City -> City -> Tunel
+        theTunel (Reg cs ls (t:ts)) city1 city2
+            | connectsT city1 city2 t = t
+            | otherwise = theTunel (Reg cs ls ts) city1 city2 
 
 availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
 availableCapacityForR (Reg _ [] _) city1 city2 = error "No hay links"
