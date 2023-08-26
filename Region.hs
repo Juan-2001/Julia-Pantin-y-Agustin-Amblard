@@ -97,12 +97,12 @@ availableCapacityForR reg@(Reg cs (l:ls) ts) city1 city2 =
         capacityL l - usedCapacity l reg
     else
         availableCapacityForR (Reg cs ls ts) city1 city2
+    where
+        usedCapacity :: Link -> Region -> Int
+        usedCapacity l (Reg _ _ ts) = capacityL l - tunelsLink l ts
 
-usedCapacity :: Link -> Region -> Int
-usedCapacity l (Reg _ _ ts) = capacityL l - tunelsLink l ts
-
-tunelsLink :: Link -> [Tunel] -> Int
-tunelsLink _ [] = 0
-tunelsLink l (t:ts)
-    | usesT l t = 1 + tunelsLink l ts
-    | otherwise = tunelsLink l ts
+        tunelsLink :: Link -> [Tunel] -> Int
+        tunelsLink _ [] = 0
+        tunelsLink l (t:ts)
+            | usesT l t = 1 + tunelsLink l ts
+            | otherwise = tunelsLink l ts
