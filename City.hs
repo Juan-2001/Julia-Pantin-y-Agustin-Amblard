@@ -14,4 +14,6 @@ nameC (Cit city point) = city
 
 
 distanceC :: City -> City -> Float
-distanceC (Cit city1 point1) (Cit city2 point2) = difP point1 point2
+distanceC (Cit city1 point1) (Cit city2 point2) 
+   | difP point1 point2 == 0 = error "Ya hay una ciudad en este punto"
+   | otherwise = difP point1 point2
