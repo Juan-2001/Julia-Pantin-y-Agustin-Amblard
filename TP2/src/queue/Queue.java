@@ -34,12 +34,7 @@ public class Queue {
 	}
 
 	public int size() {
-		if (isEmpty()) {
-			throw new Error(Queue_is_empty);
-		}
-		else { 
 			return queues.size();
-		}
 	}
 	private static final String Queue_is_empty = "Queue is empty";
 }

@@ -22,6 +22,5 @@ public Object head() {
 	}
 public MainList size() {
 	return null;
-	;
 }
 }
