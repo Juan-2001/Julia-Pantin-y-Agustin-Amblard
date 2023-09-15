@@ -2,13 +2,11 @@ package queue;
 
 
 public class EmptyList extends MainList {
-	public static final String QUEUE_IS_EMPTY = "Queue is empty";
-
 	public MainList add(Object cargo) {
 		return NotEmptyList( cargo, this );
 	}
 
-	public MainList remove_head() {
+	public MainList take() {
 		throw new Error(QUEUE_IS_EMPTY);
 	}
 
@@ -19,4 +17,6 @@ public class EmptyList extends MainList {
 	public int size() {
 		return 0;
 	}
+
+	public static final String QUEUE_IS_EMPTY = "Queue is empty";
 }

@@ -6,7 +6,7 @@ public abstract class MainList {
 	}
 
 	public abstract  MainList add(Object cargo);
-	public abstract MainList remove_head();
+	public abstract MainList take();
 	public abstract Object head();
 	public abstract int size();
 

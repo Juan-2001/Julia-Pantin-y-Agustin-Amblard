@@ -11,7 +11,7 @@ public class NotEmptyList extends MainList{
 	public MainList add(Object cargo) {
 		return NotEmptyList(this.cargo, next.add( cargo ));
 	}
-	public MainList remove_head() {
+	public MainList take() {
 		return next;
 	}
 	public Object head() {
