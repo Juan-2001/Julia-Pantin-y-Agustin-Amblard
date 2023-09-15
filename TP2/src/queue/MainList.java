@@ -1,26 +1,13 @@
 package queue;
 
-import java.util.ArrayList;
-import java.util.List;
+public abstract class MainList {
+	public MainList NotEmptyList( Object cargo, MainList next ) {
+		return new NotEmptyList( cargo, next );
+	}
 
-public class MainList {
-	public List <Object> queues = new ArrayList<>();
-	
-	static MainList Empty(Queue queues) {
-			return new EmptyList();
+	public abstract  MainList add(Object cargo);
+	public abstract MainList remove_head();
+	public abstract Object head();
+	public abstract int size();
+
 	}
-	static MainList NotEmpty(Queue queues) {
-			return new NotEmptyList();
-	}
-	
-	
-public Object take() {
-	return null;
-}
-public Object head() {
-	return null;
-	}
-public MainList size() {
-	return null;
-}
-}

@@ -1,17 +1,22 @@
 package queue;
 
 
-public class EmptyList extends MainList{
-	
-	public Object take(Object  object) {
-		 throw new Error("Queue is empty"); // throw new RuntimeException()
-		 }
-	
+public class EmptyList extends MainList {
+	public static final String QUEUE_IS_EMPTY = "Queue is empty";
+
+	public MainList add(Object cargo) {
+		return NotEmptyList( cargo, this );
+	}
+
+	public MainList remove_head() {
+		throw new Error(QUEUE_IS_EMPTY);
+	}
+
 	public Object head() {
-		throw new Error("Queue is empty");
-		 }
-	
-	public int Queue() {
-		throw new Error("Queue is empty");
-		}
+		throw new Error(QUEUE_IS_EMPTY);
+	}
+
+	public int size() {
+		return 0;
+	}
 }
