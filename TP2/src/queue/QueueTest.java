@@ -14,44 +14,38 @@ public class QueueTest {
   }
 
   @Test public void test02AddElementsToTheQueue() {
-    assertFalse( addSomethingElement().isEmpty() );
+    assertFalse( queueWithSomethingElement().isEmpty() );
   }
 
   @Test public void test03AddedElementsIsAtHead() {
-    assertEquals( somethingElement, addSomethingElement().head() );
+    assertEquals( somethingElement, queueWithSomethingElement().head() );
   }
 
   @Test public void test04TakeRemovesElementsFromTheQueue() {
-    Queue queue = addSomethingElement();
+    Queue queue = queueWithSomethingElement();
     queue.take();
     assertTrue( queue.isEmpty() );
   }
 
   @Test public void test05TakeReturnsLastAddedObject() {
-    Queue queue = addSomethingElement();
+    Queue queue = queueWithSomethingElement();
     assertEquals( somethingElement, queue.take() );
   }
 
   @Test public void test06QueueBehavesFIFO() {
-    Queue queue = new Queue();
-    queue.add( firstObject );
-    queue.add( secondObject );
-
+    Queue queue = queueWithFirstAndSecondObject();
     assertEquals( queue.take(), firstObject );
     assertEquals( queue.take(), secondObject );
     assertTrue( queue.isEmpty() );
   }
 
   @Test public void test07HeadReturnsFirstAddedObject() {
-    Queue queue = new Queue();
-    queue.add( firstObject );
-    queue.add( secondObject );
-
+    Queue queue = queueWithFirstAndSecondObject();
     assertEquals( queue.head(), firstObject );
   }
 
   @Test public void test08HeadDoesNotRemoveObjectFromQueue() {
-    Queue queue = addSomethingElement();
+    Queue queue = queueWithSomethingElement();
     sizeEquals1(queue);
     queue.head();
     sizeEquals1(queue);
@@ -67,19 +61,15 @@ public class QueueTest {
   }
 
   @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-    Queue queue = addSomethingElement();
+    Queue queue = queueWithSomethingElement();
     queue.take();
     tryTakingOrCatchingError(queue);
   }
 
   @Test public void test10CanNotHeadWhenThereAreNoObjectsInTheQueue() {
-    Queue queue = new Queue();
-    try {
-      queue.head();
-      fail( expectedErrorNotThrown );
-    } catch (Error e) {
-      assertTrue( e.getMessage().equals( queueIsEmpty ) );
-    }
+  assertEquals(queueIsEmpty,
+          assertThrows(Error.class,
+                  ()->new Queue().head()).getMessage());
   }
   // Method and Constants extracted
   private static final String queueIsEmpty = "Queue is empty";
@@ -92,17 +82,17 @@ public class QueueTest {
 		assertEquals( 1, queue.size() );
 	}
   
-  Queue addSomethingElement() {
+  Queue queueWithSomethingElement() {
 		return new Queue().add( somethingElement );
 	}
   
   void tryTakingOrCatchingError(Queue queue) {
     Error e = assertThrows(Error.class, ()-> queue.take());
-		/*try {
-	      queue.take();
-	      fail( expectedErrorNotThrown );
-	    } catch (Error e) {
-	      assertTrue( e.getMessage().equals( queueIsEmpty ) );
-	    }*/
 	}
+  private static Queue queueWithFirstAndSecondObject() {
+    Queue queue = new Queue();
+    queue.add( firstObject );
+    queue.add( secondObject );
+    return queue;
+  }
 }
