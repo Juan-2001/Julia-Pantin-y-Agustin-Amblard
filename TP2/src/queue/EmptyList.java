@@ -14,9 +14,14 @@ public class EmptyList extends MainList {
 		throw new Error(QUEUE_IS_EMPTY);
 	}
 
+
 	public int size() {
 		return 0;
 	}
 
 	public static final String QUEUE_IS_EMPTY = "Queue is empty";
+
+	protected boolean isEmpty() {
+		return true;
+	}
 }
