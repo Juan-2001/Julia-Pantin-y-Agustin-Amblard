@@ -8,7 +8,7 @@ public class NotEmptyList extends MainList{
 		this.cargo = cargo;
 		this.next = next;
 	}
-	public MainList add(Object cargo) {
+	public MainList add(Object cargo) {	
 		return NotEmptyList(this.cargo, next.add( cargo ));
 	}
 	public MainList take() {
@@ -20,4 +20,6 @@ public class NotEmptyList extends MainList{
 	public int size() {
 		return 1 + next.size();
 	}
-}
+	protected boolean isEmpty() {
+		return false;
+	}
