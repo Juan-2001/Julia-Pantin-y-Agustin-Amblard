@@ -4,37 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Queue {
-	public MainList myMainList;
-	public List <Object> queues = new ArrayList<>();
+	public MainList myMainList = new EmptyList();
 
-	public boolean isEmpty() {
-		return queues.isEmpty();
-	}
-	
-	public Queue add( Object  object ) {
-		queues.add(object);
-		return this;
-	}
+    public boolean isEmpty() {
+        return myMainList.isEmpty();
+    }
 
-	public Object take() {
-		if (isEmpty()) {
-		        throw new Error(Queue_is_empty);
-		 } else {
-		        return queues.remove(0);
-		    }
-		 }
+    public Queue add(Object object) {
+        myMainList = myMainList.add(object);
+        return this;
+    }
+
+    public Object take() {
+        Object removedObject = myMainList.head();
+        myMainList = myMainList.take();
+        return removedObject;
+    }
 
 	public Object head() {
-		if (isEmpty()) {
-            throw new Error(Queue_is_empty);
-        }
-		else {
-			return queues.get(0);
-		}
+		return myMainList.head();
 	}
 
 	public int size() {
-			return queues.size();
+		return myMainList.size();
 	}
-	private static final String Queue_is_empty = "Queue is empty";
 }
