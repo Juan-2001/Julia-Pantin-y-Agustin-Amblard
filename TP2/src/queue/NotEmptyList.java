@@ -22,4 +22,4 @@ public class NotEmptyList extends MainList{
 	}
 	protected boolean isEmpty() {
 		return false;
-	}
+	}}
