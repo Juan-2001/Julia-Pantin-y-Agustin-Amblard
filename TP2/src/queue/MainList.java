@@ -10,4 +10,6 @@ public abstract class MainList {
 	public abstract Object head();
 	public abstract int size();
 
+	protected abstract boolean isEmpty();
+
 	}
