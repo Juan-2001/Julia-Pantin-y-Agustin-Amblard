@@ -20,12 +20,27 @@ public class NemoTest {
    }
   
   
-  @Test public void test02Movement() {
+  @Test public void test02MovesDown() {
         assertEquals(-1, new Nemo().move("d").getDepth());
+  }
+  @Test public void test03MovesUp() {
          assertEquals(1, new Nemo().move("u").getDepth());
+  }
+   @Test public void test04RotatesRight() {
          assertEquals("este", new Nemo().move("r").getDirection());
+   }
+   @Test public void test05RotatesLeft() {
          assertEquals("oeste", new Nemo().move("l").getDirection());
+   }
+   @Test public void test06MovesForward() {
          assertArrayEquals(new int[] {0,1}, new Nemo().move("f").getPosition());
    }
-  
+   @Test public void test07MovesDownTwice() {
+	   assertEquals(-2, new Nemo().move("dd").getDepth());
+   }
+   @Test public void test08CompoundMovement() {
+	   String command = "ddudllr";
+	   assertEquals(-2, new Nemo().move(command).getDepth());
+	   assertEquals("oeste", new Nemo().move(command).getDirection());
+   }
 }
