@@ -35,12 +35,14 @@ public class NemoTest {
    @Test public void test06MovesForward() {
          assertArrayEquals(new int[] {0,1}, new Nemo().move("f").getPosition());
    }
-   @Test public void test07MovesDownTwice() {
-	   assertEquals(-2, new Nemo().move("dd").getDepth());
+         
+  @Test public void test07RotationChangesForward() {
+	  assertArrayEquals(new int[] {1,1}, new Nemo().move("frf").getPosition());
    }
-   @Test public void test08CompoundMovement() {
-	   String command = "ddudllr";
+   @Test public void test07CompoundMovement() {
+	   String command = "ddudflflr";
 	   assertEquals(-2, new Nemo().move(command).getDepth());
 	   assertEquals("oeste", new Nemo().move(command).getDirection());
+	   assertArrayEquals(new int[] {-1,1},new Nemo().move(command).getPosition());
    }
 }
