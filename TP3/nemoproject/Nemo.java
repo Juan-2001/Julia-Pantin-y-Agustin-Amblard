@@ -1,25 +1,19 @@
 package nemoproject;
 
 public class Nemo {
-    private int x;
-    private int y;
-    private int depth;
-    private String direction;
-    private int u = 1;
-    private int d = -1;
-    private int r = 90;
-    private int l = -90;
-    private int f = 1;
-    private int[] position;
+	    private int x;
+	    private int y;
+	    private int depth;
+	    private String direction;
+	    private int[] position;
 
-    public Nemo() {
-        this.x = 0;
-        this.y = 0; 
-        this.depth = 0;
-        this.direction = "norte";
-        this.position = new int[]{x, y};
-    }
-
+	    public Nemo() {
+	        this.x = 0;
+	        this.y = 0; 
+	        this.depth = 0;
+	        this.direction = "norte";
+	        this.position = new int[]{x, y};
+	    }
     public int getDepth() {
     	return this.depth;
     }
@@ -33,9 +27,16 @@ public class Nemo {
     }
     
     public Nemo move(String command) {
-        if (command.equals("u")) {
-            this.depth += 1;
-        }
+        command.chars()
+        .mapToObj(c -> (char) c)
+        .forEach(this::processCharacter);
+return this;
+}
+private void processCharacter(char c) {
+String command = String.valueOf(c);
+		if (command.equals("u")) {
+			this.depth += 1;
+		}
         if (command.equals("d")) {
             this.depth -= 1;
         }
@@ -87,7 +88,6 @@ public class Nemo {
                     this.position[0] -= 1;
                     break;
             }
-        }
-        return this;
-    }
+     }
+}
 }
