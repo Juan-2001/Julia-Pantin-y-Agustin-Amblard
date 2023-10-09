@@ -88,6 +88,4 @@ String command = String.valueOf(c);
                     this.position[0] -= 1;
                     break;
             }
-     }
-}
-}
+        }}}
