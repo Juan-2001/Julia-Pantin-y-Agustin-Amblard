@@ -1,26 +1,21 @@
 package nemoproject;
 
 public class Nemo {
-	    private int x;
-	    private int y;
-	    private int depth;
-	    private String direction;
-	    private int[] position;
-        /* como procesar los caracteres sin if ni switch, cam handle. dado una coleccion de elementos
-        , para todx elemento en esa coleccion si el elemento cumple que haga algo
-                metodo estatico que se
-                Static command(cha c{
-                {} para todx e   e.cumple(c)
-                 }
-                 tener la idea de un punto en el mapa con las coordenadas x e y variables separadas
-                  na subclase por cada caracter */
-	    public Nemo() {
-	        this.x = 0;
-	        this.y = 0; 
-	        this.depth = 0;
-	        this.direction = "norte";
-	        this.position = new int[]{x, y};
-	    }
+    private int depth;
+    private int position;
+    private String direction;
+    private int u = 1;
+    private int d = -1;
+    private int r = 90;
+    private int l = -90;
+    private int f = 1;
+
+    public Nemo() {
+        this.depth = 0;
+        this.position = 0;
+        this.direction = "norte";
+    }
+
     public int getDepth() {
     	return this.depth;
     }
