@@ -2,7 +2,7 @@ package nemoproject;
 
 public class Nemo {
     private int depth;
-    private int position;
+    private int[] position;
     private String direction;
     private int u = 1;
     private int d = -1;
@@ -11,9 +11,9 @@ public class Nemo {
     private int f = 1;
 
     public Nemo() {
-        this.depth = 0;
-        this.position = 0;
-        this.direction = "norte";
+        this.depth = new Coordinates().getDepth();
+        this.position = new Coordinates().getPosition();
+        this.direction = new Coordinates().getDirection();
     }
 
     public int getDepth() {

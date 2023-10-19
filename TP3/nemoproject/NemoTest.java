@@ -17,11 +17,7 @@ public class NemoTest {
          assertArrayEquals(new int[] {0,0}, new Nemo().move("").getPosition());
          assertEquals("norte" , new Nemo().move("").getDirection());
    }
-  
-<<<<<<< HEAD
-=======
-  
->>>>>>> main
+
   @Test public void test02MovesDown() {
         assertEquals(-1, new Nemo().move("d").getDepth());
   }
@@ -41,18 +37,9 @@ public class NemoTest {
   @Test public void test07RotationChangesForward() {
 	  assertArrayEquals(new int[] {1,1}, new Nemo().move("frf").getPosition());
    }
-<<<<<<< HEAD
    @Test public void test08CompoundMovement() {
-	   String command = "ddudflflr";
-	   assertEquals(-2, new Nemo().move(command).getDepth());
-	   assertEquals("oeste", new Nemo().move(command).getDirection());
-	   assertArrayEquals(new int[] {-1,1}, new Nemo().move(command).getPosition());
-=======
-   @Test public void test07CompoundMovement() {
-	   String command = "ddudflflr";
-	   assertEquals(-2, new Nemo().move(command).getDepth());
-	   assertEquals("oeste", new Nemo().move(command).getDirection());
-	   assertArrayEquals(new int[] {-1,1},new Nemo().move(command).getPosition());
->>>>>>> main
-   }
-}
+       String command = "ddudflflr";
+       assertEquals(-2, new Nemo().move(command).getDepth());
+       assertEquals("oeste", new Nemo().move(command).getDirection());
+       assertArrayEquals(new int[]{-1, 1}, new Nemo().move(command).getPosition());
+   }}
