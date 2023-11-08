@@ -1,93 +1,73 @@
 package nemoproject;
 
-public class Nemo {
-    private int depth;
-    private int position;
-    private String direction;
-    private int u = 1;
-    private int d = -1;
-    private int r = 90;
-    private int l = -90;
-    private int f = 1;
 
-    public Nemo() {
-        this.depth = 0;
-        this.position = 0;
-        this.direction = "norte";
+import java.util.LinkedList;
+import java.util.List;
+
+public class Nemo {
+	private DepthStatus depthStatus;
+    private Coordinates position;
+    private Direction direction;
+    public LinkedList<Commands> commandList = new LinkedList<>(List.of(new Up(), new Forward(), new Down(), new Left(), new Right(), new ReleaseCapsule()));
+
+
+    public Nemo( int x, int y, DepthStatus depthStatus, Direction direction ) {
+        this.position = new Coordinates(x, y);
+        this.direction = direction;
+        this.depthStatus = depthStatus;
     }
 
     public int getDepth() {
-    	return this.depth;
+        return this.depthStatus.getDepth();
     }
 
     public int[] getPosition() {
-        return this.position;
+        return this.position.getPosition();
     }
-    
-    public String getDirection() {
-        return this.direction;
-    }
-    
-    public Nemo move(String command) {
-        command.chars()
-        .mapToObj(c -> (char) c)
-        .forEach(this::processCharacter);
-return this;
-}
-private void processCharacter(char c) {
-String command = String.valueOf(c);
-		if (command.equals("u")) {
-			this.depth += 1;
-		}
-        if (command.equals("d")) {
-            this.depth -= 1;
-        }
-        if (command.equals("r")) {
-            switch (this.direction) {
-                case "norte":
-                    this.direction = "este";
-                    break;
-                case "este":
-                    this.direction = "sur";
-                    break;
-                case "sur":
-                    this.direction = "oeste";
-                    break;
-                case "oeste":
-                    this.direction = "norte";
-                    break;
-            }
-        }
-        if (command.equals("l")) {
-            switch (this.direction) {
-                case "norte":
-                    this.direction = "oeste";
-                    break;
-                case "oeste":
-                    this.direction = "sur";
-                    break;
-                case "sur":
-                    this.direction = "este";
-                    break;
-                case "este":
-                    this.direction = "norte";
-                    break;
-            }
-        }
 
-        if (command.equals("f")) {
-            switch (this.direction) {
-                case "norte":
-                    this.position[1] += 1;
-                    break;
-                case "sur":
-                    this.position[1] -= 1;
-                    break;
-                case "este":
-                    this.position[0] += 1;
-                    break;
-                case "oeste":
-                    this.position[0] -= 1;
-                    break;
-            }
-        }}}
+    public String getDirection() {
+        return this.direction.getDirection();
+    }
+    
+    public Nemo forward() {
+        this.position = this.position.add(this.direction.moveForward());
+        return this;
+    }
+    public Nemo ascend() {
+        this.depthStatus = this.depthStatus.ascend();
+        return this;
+    }
+
+    public Nemo descend() {
+        this.depthStatus = this.depthStatus.descend();
+        return this;
+    }
+
+    
+    public Nemo move(String message) {
+        message.chars().forEach(x-> executeCommand((char) x) );
+        return this;
+    }
+private void executeCommand(char c) {
+	    commandList.stream()
+	            .filter(command -> command.validCharacter(c))
+	            .findFirst()
+	            .ifPresent(command -> command.execute(this));
+	
+	}
+
+public Nemo turnLeft() {
+	this.direction = this.direction.turnLeft();
+		return null;
+}
+
+public Nemo turnRight() {
+	this.direction = this.direction.turnRight();
+	return this;
+}
+
+public Nemo releaseCapsule() {
+	 this.depthStatus.releaseCapsule();
+	return this;
+}
+        }
