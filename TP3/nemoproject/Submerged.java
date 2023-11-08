@@ -28,4 +28,8 @@ public class Submerged extends DepthStatus {
     public void releaseCapsule() {
         throw new RuntimeException("El submarino explota.");
     }
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

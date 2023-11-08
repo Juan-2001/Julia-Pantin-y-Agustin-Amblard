@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Nemo {
+<<<<<<< Updated upstream
 	private DepthStatus depthStatus;
     private Coordinates position;
     private Direction direction;
@@ -15,6 +16,21 @@ public class Nemo {
         this.position = new Coordinates(x, y);
         this.direction = direction;
         this.depthStatus = depthStatus;
+=======
+    private int depth;
+    private int[] position;
+    private String direction;
+    private int u = 1;
+    private int d = -1;
+    private int r = 90;
+    private int l = -90;
+    private int f = 1;
+
+    public Nemo() {
+        this.depth = new Coordinates().getDepth();
+        this.position = new Coordinates().getPosition();
+        this.direction = new Coordinates().getDirection();
+>>>>>>> Stashed changes
     }
 
     public int getDepth() {
