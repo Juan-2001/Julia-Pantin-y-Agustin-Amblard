@@ -5,17 +5,15 @@ public class Linea {
     private TriunfoStrategy triunfoStrategy;
     public int columnas;
     public int filas;
-    private boolean esTurnoRojas;
-    private char ultimoJugador;
-
+    private EstadoJuego estadoActual;
 
     public Linea(int columnas, int filas, char winningVariant) {
         this.columnas = columnas;
         this.filas = filas;
         this.board = new char[filas][columnas];
-        this.esTurnoRojas = true; //Rojas comienzan
         initializeStrategy(winningVariant);
         initializeBoard();
+        this.estadoActual = new JuegaRojo(this);
     }
     private void initializeStrategy(char winningVariant) {
         switch (winningVariant) {
@@ -41,12 +39,6 @@ public class Linea {
         }
     }
 
-    public boolean finished() {
-        // Antes de llamar a checkWin, asegúrate de que ultimoJugador tenga un valor válido.
-        return ultimoJugador != '\0' && triunfoStrategy.checkWin(board, ultimoJugador) || isBoardFull();
-    }
-
-
     private boolean isBoardFull() {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
@@ -58,31 +50,36 @@ public class Linea {
         return true; // No hay espacios vacíos, el tablero está lleno
     }
 
+    public void setEstado(EstadoJuego nuevoestado) {
+        this.estadoActual = nuevoestado;
+    }
     public void playRedAt(int column) {
-        if (esTurnoRojas) {
-            if (isValidMove(column)) {
-                dropPiece(column, 'R');
-                ultimoJugador = 'R'; // Agregar esta línea
-                esTurnoRojas = false; // Cambio de turno
+        if (isValidMove(column)) {
+            dropPiece(column, 'R');
+            if (triunfoStrategy.checkWin(board, 'R') || isBoardFull()) {
+                setEstado(new GameOver(this));
             } else {
-                System.out.println("Columna llena. Elige otra columna.");
+                setEstado(new JuegaAzul(this));
             }
         } else {
-            throw new IllegalStateException("No es el turno de las rojas");
+            System.out.println("Columna llena. Elige otra columna.");
         }
     }
     public void playBlueAt(int column) {
-        if (!esTurnoRojas) {
-            if (isValidMove(column)) {
-                dropPiece(column, 'B');
-                ultimoJugador = 'B'; // Agregar esta línea
-                esTurnoRojas = true; // Cambio de turno
+        if (isValidMove(column)) {
+            dropPiece(column, 'B');
+            if (triunfoStrategy.checkWin(board, 'B') || isBoardFull()) {
+                setEstado(new GameOver(this));
             } else {
-                System.out.println("Columna llena. Elige otra columna.");
+                setEstado(new JuegaRojo(this));
             }
         } else {
-            throw new IllegalStateException("No es el turno de las azules");
+            System.out.println("Columna llena. Elige otra columna.");
         }
+    }
+
+    public boolean finished() {
+        return estadoActual instanceof GameOver;
     }
 
     public String show() {
@@ -104,22 +101,24 @@ public class Linea {
         }
         display.append(" |\n");
 
-        // Mostrar el mensaje del jugador actual
-        display.append(esTurnoRojas ? "> Playing Red <" : "> Playing Blue <").append("\n");
+        // Mostrar el mensaje del jugador actual o que el juego ha terminado
+        display.append(estadoActual.jugadorActual()).append("\n");
+
         return display.toString();
     }
 
+
     public char[][] getBoard() {
         return board;
-    }
-    public boolean isEsTurnoRojas() {
-        return esTurnoRojas;
     }
     public int getFilas() {
         return filas;
     }
     public int getColumnas() {
         return columnas;
+    }
+    public EstadoJuego getEstadoActual() {
+        return estadoActual;
     }
 
     private void dropPiece(int column, char piece) {
