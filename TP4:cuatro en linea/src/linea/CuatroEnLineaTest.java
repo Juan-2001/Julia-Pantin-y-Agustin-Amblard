@@ -1,7 +1,6 @@
 package linea;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +42,6 @@ public class CuatroEnLineaTest {
         assertTrue(game.getEstadoActual() instanceof GameOver); // Comprobar que el estado es GameOver
     }
 
-
     @Test
     public void test05PlayUntilDraw() {
         Linea game = createGame(3, 3, 'C');
@@ -52,25 +50,88 @@ public class CuatroEnLineaTest {
         assertTrue(game.finished());
         assertTrue(game.getEstadoActual() instanceof GameOver); // Comprobar que el estado es GameOver
     }
+
+    @Test
+    public void test06InicializacionDiferentesDimensiones() {
+        Linea juegoPequeño = createGame(4, 4, 'A');
+        assertEquals(4, juegoPequeño.getFilas());
+        assertEquals(4, juegoPequeño.getColumnas());
+
+        Linea juegoGrande = new Linea(10, 10, 'B');
+        assertEquals(10, juegoGrande.getFilas());
+        assertEquals(10, juegoGrande.getColumnas());
+    }
+    @Test
+    public void test07JugadorIncorrectoIntentaJugarPrimero() {
+        Linea juego = createGame(6,7,'C');
+        assertThrows(IllegalStateException.class, () -> juego.playBlueAt(0),
+                "Debería lanzar una excepción si el jugador incorrecto intenta jugar primero");
+    }
+
+    @Test
+    public void test08AlternanciaDeTurnos() {
+        Linea juego = createGame(6,7,'C');
+        juego.playRedAt(0);
+        assertTrue(juego.getEstadoActual() instanceof JuegaAzul);
+
+        juego.playBlueAt(1);
+        assertTrue(juego.getEstadoActual() instanceof JuegaRojo);
+    }
+
+    @Test
+    public void test09VictoriaHorizontal() {
+        Linea juego = new Linea(7, 6, 'A');
+        // Asegúrate de que esta secuencia de jugadas resulte en una victoria horizontal para Rojo
+        juego.playRedAt(0); // R-------
+        juego.playBlueAt(6); // R------B
+        juego.playRedAt(1); // RR-----B
+        juego.playBlueAt(6); // RR-----BB
+        juego.playRedAt(2); // RRR----BB
+        juego.playBlueAt(6); // RRR----BBB
+        juego.playRedAt(3); // RRRR---BBB
+        assertTrue(juego.finished());
+        assertTrue(juego.getEstadoActual() instanceof GameOver);
+    }
+
+    @Test
+    public void test10EmpateTableroCompleto() {
+        Linea juego = createGame(3,3,'C');
+        juego.playRedAt(0); // R--
+        juego.playBlueAt(1); // -B-
+        juego.playRedAt(2); // --R
+        juego.playBlueAt(0); // RB-
+        juego.playRedAt(1); // RBR
+        juego.playBlueAt(2); // RBR
+        juego.playRedAt(0); // RBR
+        juego.playBlueAt(1); // RBB
+        juego.playRedAt(2); // RBR
+        assertTrue(juego.finished());
+        assertTrue(juego.getEstadoActual() instanceof GameOver);
+    }
+    @Test
+    public void test11JugadaEnColumnaLlena() {
+        Linea juego = createGame(6,7,'C');
+        for (int i = 0; i < 6; i++) {
+            juego.playRedAt(0);
+            if (juego.finished()) {
+                break; // Detiene el test si el juego ha terminado
+            }
+            if (i < 5) {
+                juego.playBlueAt(1); // Jugar en otra columna para cambiar el turno
+                if (juego.finished()) {
+                    break; // Detiene el test si el juego ha terminado
+                }}}
+        assertThrows(IllegalStateException.class, () -> juego.playRedAt(0),
+                "Debería lanzar una excepción si se intenta jugar en una columna llena");
+    }
+
     private void makeMoves(Linea game, int[] moves) {
         for (int move : moves) {
             if (game.getEstadoActual() instanceof JuegaRojo) {
                 game.playRedAt(move);
             } else if (game.getEstadoActual() instanceof JuegaAzul) {
                 game.playBlueAt(move);
-            }
-        }
-    }
-    // no estamos usando printBoart() pero la tenemos por si llega a ser necesaria
-    private void printBoard(char[][] board) {
-        for (char[] row : board) {
-            for (char cell : row) {
-                System.out.print(cell + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
+            }}}
     private Linea createGame(int filas, int columnas, char gameType) {
         return new Linea(columnas,filas, gameType);
     }

@@ -5,12 +5,7 @@ public class JuegaRojo extends EstadoJuego{
         super(juego);
     }
     public void handle(int columna) {
-        juego.playRedAt(columna);
-        if (!juego.finished()) {
-            juego.setEstado(new JuegaAzul(juego));
-        } else {
-            juego.setEstado(new GameOver(juego));
-        }
+        juego.playAt(columna, 'R');
     }
     public String jugadorActual() {
         return "> Playing Red <";

@@ -16,13 +16,9 @@ public class Game {
                     System.out.println( game.show() );
                 }
             }
-
         }
-
         private static int prompt( String message ) {
             System.out.print( message );
             return Integer.parseInt( System.console().readLine() );
         }
     }
-
-
