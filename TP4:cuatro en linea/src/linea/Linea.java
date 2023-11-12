@@ -44,7 +44,6 @@ public class Linea {
                 }}}
         return true; // No hay espacios vacíos, el tablero está lleno
     }
-
     public void setEstado(EstadoJuego nuevoestado) {
         this.estadoActual = nuevoestado;
     }

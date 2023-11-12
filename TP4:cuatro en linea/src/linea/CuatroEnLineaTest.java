@@ -124,6 +124,74 @@ public class CuatroEnLineaTest {
         assertThrows(IllegalStateException.class, () -> juego.playRedAt(0),
                 "Debería lanzar una excepción si se intenta jugar en una columna llena");
     }
+    @Test
+    public void test12VictoriaDiagonalDescendente() {
+        //hacer el test victoria diagonal descendente
+    }
+    @Test
+    public void test13JugarDespuesDeFinDelJuego() {
+        Linea juego = createGame(6,7,'C');
+        for (int i = 0; i < 6; i++) {
+            juego.playRedAt(0);
+            if (juego.finished()) {
+                break; // Detiene el test si el juego ha terminado
+            }
+            if (i < 5) {
+                juego.playBlueAt(1); // Jugar en otra columna para cambiar el turno
+                if (juego.finished()) {
+                    break; // Detiene el test si el juego ha terminado
+                }}}
+        assertThrows(IllegalStateException.class, () -> juego.playBlueAt(0),
+                "Debería lanzar una excepción si se intenta jugar después de que el juego haya terminado");
+    }
+    @Test
+    public void test14JugadasEnElMismoLugar() {
+        Linea game = createGame(6, 7, 'A');
+        game.playRedAt(0);
+        assertThrows(IllegalStateException.class, () -> game.playRedAt(0)); // Cambiado a jugar rojo nuevamente en la misma columna
+    }
+    @Test
+    public void test15JugadaInvalida() {
+        Linea game = createGame(6, 7, 'A');
+        assertThrows(IndexOutOfBoundsException.class, () -> game.playRedAt(8)); // Cambiado a IndexOutOfBoundsException si es más apropiado
+    }
+    @Test
+    public void test16EmpateConEspaciosLibres() {
+        //hacer el test empate con espacios libres
+        
+    }
+    @Test
+    public void test17VictoriaVertical() {
+        Linea game = createGame(6, 7, 'A');
+        for (int i = 0; i < 4; i++) {
+            game.playRedAt(0);
+            if (i < 3) {
+                game.playBlueAt(1);
+            }
+        }
+        assertTrue(game.finished());
+        assertTrue(game.getEstadoActual() instanceof GameOver);
+    }
+    @Test
+    public void test18EmpateConTableroCompleto() {
+        Linea game = createGame(3, 3, 'C');
+        game.playRedAt(0);
+        game.playBlueAt(1);
+        game.playRedAt(2);
+        game.playBlueAt(0);
+        game.playRedAt(1);
+        game.playBlueAt(2);
+        game.playRedAt(0);
+        game.playBlueAt(1);
+        game.playRedAt(2);
+        assertTrue(game.finished());
+        assertTrue(game.getEstadoActual() instanceof GameOver);
+    }
+
+    @Test
+    public void test19ConfiguracionInicialInvalida() {
+        assertThrows(IllegalArgumentException.class, () -> new Linea(6, 7, 'Z'));
+    }
 
     private void makeMoves(Linea game, int[] moves) {
         for (int move : moves) {
