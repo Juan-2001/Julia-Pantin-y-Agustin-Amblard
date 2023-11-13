@@ -1,10 +1,17 @@
 package linea;
 
 public abstract class EstadoJuego {
-    protected Linea juego;
-    public EstadoJuego(Linea juego) {
-        this.juego = juego;
+
+    public abstract EstadoJuego playRedAs(int column, Linea game);
+    public abstract EstadoJuego playBlueAs(int column, Linea game);
+    public abstract String getStatus();
+    public boolean isDraw(Linea game) {
+        return game.getBoard().stream().allMatch(column -> column.size() == game.getHeight());
     }
-    public abstract void handle(int columna);
-    public abstract String jugadorActual();
+    public boolean equals(Object other) {
+        return other.getClass() == this.getClass();
+    }
+    public boolean isFinished() {
+        return false;
+    }
 }
