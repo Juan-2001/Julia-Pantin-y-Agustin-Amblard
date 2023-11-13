@@ -1,123 +1,119 @@
 package linea;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Linea {
-    public char[][] board;
-    private TriunfoStrategy triunfoStrategy;
-    public int columnas;
-    public int filas;
-    private EstadoJuego estadoActual;
+    private PlayingMode modoDeJuego;
+    private EstadoJuego estadoDeJuego;
+    public static char emptySpace = '·';
+    public static char redPlayer = 'X';;
+    public static char bluePlayer= 'O';
+    private List<List<Character>> board;
+    private final int base;
+    private final int height;
+    private boolean finished;
 
-    public Linea(int columnas, int filas, char winningVariant) {
-        this.columnas = columnas;
-        this.filas = filas;
-        this.board = new char[filas][columnas];
-        initializeStrategy(winningVariant);
-        initializeBoard();
-        this.estadoActual = new JuegaRojo(this);
+    public Linea(int columnas, int filas, char mode) {
+        this.base = columnas;
+        this.height = filas;
+        this.modoDeJuego = PlayingMode.getModoDeJuegoFor( mode );
+        this.estadoDeJuego = new JuegaRojo();
+        if (base < 4 || height < 4) { throw new RuntimeException("Base and height have to be above 3."); }
+        this.board = IntStream.range(0, this.base)
+                .mapToObj(i -> new ArrayList<Character>())
+                .collect(Collectors.toList());
     }
-    private void initializeStrategy(char winningVariant) {
-        switch (winningVariant) {
-            case 'A':
-                triunfoStrategy = new TriunfoVerticalHorizontal();
-                break;
-            case 'B':
-                triunfoStrategy = new TriunfoDiagonal();
-                break;
-            case 'C':
-                triunfoStrategy = new TriunfoCualquierOrientacion();
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo de juego no válido");
-        }}
-    private void initializeBoard() {
-        for (char[] chars : board) {
-            Arrays.fill(chars, ' ');
-        }
-    }
-    private boolean isBoardFull() {
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                if (board[i][j] == ' ') {
-                    return false; // Encontró un espacio vacío, el tablero no está lleno
-                }}}
-        return true; // No hay espacios vacíos, el tablero está lleno
-    }
-    public void setEstado(EstadoJuego nuevoestado) {
-        this.estadoActual = nuevoestado;
-    }
-    public void playAt(int column, char player) {
-        if (estadoActual instanceof GameOver) {
-            throw new IllegalStateException("El juego ha terminado. No se pueden realizar más movimientos.");
-        }
-        if ((player == 'R' && !(estadoActual instanceof JuegaRojo)) ||
-                (player == 'B' && !(estadoActual instanceof JuegaAzul))) {
-            throw new IllegalStateException("No es el turno de " + (player == 'R' ? "las rojas" : "las azules"));
-        }
-        realizarJugada(column, player);
-    }
-    public void playRedAt(int column) {
-        playAt(column, 'R');
-    }
-    public void playBlueAt(int column) {
-        playAt(column, 'B');
-    }
-    private boolean isValidMove(int column) {
-        return board[0][column] == ' '; // Verifica si la parte superior de la columna está vacía
+    public boolean finished() { return this.getStatus().isFinished(); }
+
+    public void playRedAt( int column ) {
+        this.estadoDeJuego = estadoDeJuego.playRedAs( column, this);
+        checkIfGameOver( redPlayer );
     }
 
-    private void realizarJugada(int column, char jugador) {
-        if (!isValidMove(column)) {
-            throw new IllegalStateException("Columna llena. Elige otra columna.");
-        }
-        dropPiece(column, jugador);
-        actualizarEstadoDespuesDeJugar(jugador);
+    public void playBlueAt( int column ) {
+        this.estadoDeJuego = estadoDeJuego.playBlueAs( column, this);
+        checkIfGameOver( bluePlayer );
     }
-    private void actualizarEstadoDespuesDeJugar(char jugador) {
-        if (triunfoStrategy.checkWin(board, jugador) || isBoardFull()) {
-            setEstado(new GameOver(this));
-        } else {
-            setEstado(jugador == 'R' ? new JuegaAzul(this) : new JuegaRojo(this));
+
+    public void dropPieceInColumn( int column, char player ) {
+        column = column - 1;
+        if ( !isColumnInBounds( column )) {
+            throw new RuntimeException("The column is not between 1 and " + this.base);
         }
+        if ( this.board.get( column ).size() == this.height) {
+            throw new RuntimeException("Column " + (column + 1)+ " is full.");
+        }
+        this.board.get( column ).add( player );
+        this.finished = modoDeJuego.checkWin( player, this );
     }
-    public boolean finished() {
-        return estadoActual instanceof GameOver;
+
+    public char getCharAt(int row, int column) {
+        int expectedRow = this.height - 1 - row;
+        if (isColumnInBounds( column ) && expectedRow < this.board.get(column).size() && expectedRow >= 0) {
+            return this.board.get(column).get(expectedRow);
+        }
+        return emptySpace;
+    }
+    public boolean victoriaVertical(char player) {
+        return IntStream.range(0, this.getBase())
+                .anyMatch(column -> IntStream.range(0, this.getHeight() - 3)
+                        .anyMatch(row -> IntStream.range(0, 4)
+                                .allMatch(i -> this.getCharAt(row + i, column) == player)));
+    }
+
+    public boolean victoriaHorizontal(char player) {
+        return IntStream.range(0, this.getHeight())
+                .anyMatch(row -> IntStream.range(0, this.getBase() - 3)
+                        .anyMatch(column -> IntStream.range(0, 4)
+                                .allMatch(i -> this.getCharAt(row, column + i) == player)));
+    }
+
+    public boolean victoriaDiagonal(char player) {
+        return IntStream.range(0, this.getHeight() - 3)
+                .anyMatch(row -> IntStream.range(0, this.getBase() - 3)
+                        .anyMatch(column -> IntStream.range(0, 4)
+                                .allMatch(i -> this.getCharAt(row + i, column + i) == player)))
+                || IntStream.range(0, this.getHeight() - 3)
+                .anyMatch(row -> IntStream.range(3, this.getBase())
+                        .anyMatch(column -> IntStream.range(0, 4)
+                                .allMatch(i -> this.getCharAt(row + i, column - i) == player)));
     }
 
     public String show() {
-        StringBuilder display = new StringBuilder();
-        // Mostrar el tablero
-        for (int i = 0; i < filas; i++) {
-            display.append("|");
-            for (int j = 0; j < columnas; j++) {
-                display.append(" ").append(board[i][j] == ' ' ? "-" : board[i][j]);
-            }
-            display.append(" |\n");
+        String playingSlots = IntStream.range(0, this.height)
+                .mapToObj(i -> "| " + IntStream.range(0, this.base)
+                        .mapToObj(j -> String.valueOf(this.getCharAt(i, j)))
+                        .collect(Collectors.joining(" "))
+                        + " |\n")
+                .collect(Collectors.joining());
+        String bottom = "|" + "^".repeat(this.base * 2 + 1) + "|";
+        String turn = estadoDeJuego.getStatus() + "\n" ;
+        return "\n" + playingSlots + bottom + "\n" + turn;
+    }
+
+
+//ACCESSORS
+    private void checkIfGameOver(char slot) {
+        if ( this.finished) {
+            this.estadoDeJuego = new GameOver( slot );
         }
-        // Mostrar las coordenadas de las columnas en la última fila
-        display.append("|");
-        for (int k = 0; k < columnas; k++) {
-            display.append(" ^");
-        }
-        display.append(" |\n");
-        // Mostrar el mensaje del jugador actual o que el juego ha terminado
-        display.append(estadoActual.jugadorActual()).append("\n");
-        return display.toString();
     }
-    public int getFilas() {
-        return filas;
+    private boolean isColumnInBounds(int desiredColumn) {
+        return desiredColumn >= 0 && desiredColumn < this.base;
     }
-    public int getColumnas() {
-        return columnas;
+    public int getHeight() {
+        return this.height;
     }
-    public EstadoJuego getEstadoActual() {
-        return estadoActual;
+    public int getBase() {
+        return this.base;
     }
-    private void dropPiece(int column, char piece) {
-        for (int i = filas - 1; i >= 0; i--) {
-            if (board[i][column] == ' ') {
-                board[i][column] = piece;
-                break;
-            }}}
+    public List<List<Character>> getBoard() {
+        return this.board;
+    }
+    public EstadoJuego getStatus() {
+        return this.estadoDeJuego;
+    }
 }
