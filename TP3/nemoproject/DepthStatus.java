@@ -5,8 +5,4 @@ public abstract class DepthStatus{
 	public abstract DepthStatus ascend();
 	public abstract DepthStatus descend();
 	public abstract void releaseCapsule();
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
